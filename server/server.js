@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import * as Sentry from '@sentry/node';
 import { clerkWebhook } from './controllers/webhooks.js';
+import companyRoutes from './routes/companyRoutes.js';
 
 dotenv.config();
 
@@ -14,6 +15,8 @@ await connectDB();
 
 app.use(cors());
 app.use(express.json());
+
+app.use('/api/company', companyRoutes);
 
 app.get('/', (req, res) => res.send("Hello world"));
 
