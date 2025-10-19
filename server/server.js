@@ -6,12 +6,14 @@ import connectDB from './config/db.js';
 import * as Sentry from '@sentry/node';
 import { clerkWebhook } from './controllers/webhooks.js';
 import companyRoutes from './routes/companyRoutes.js';
+import connectCloudinary from './config/cloudinary.js';
 
 dotenv.config();
 
 const app = express(); // ✅ app must exist first
 
 await connectDB();
+await connectCloudinary()
 
 app.use(cors());
 app.use(express.json());

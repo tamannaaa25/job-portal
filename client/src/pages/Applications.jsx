@@ -24,11 +24,21 @@ const Applications = () => {
                 </span>
                 <input
                   id="resumeUpload"
-                  onChange={(e) => setResume(e.target.files[0])}
-                  accept="application/pdf"
+                  name="resume"
                   type="file"
+                  accept="application/pdf"
+                  onChange={(e) => setResume(e.target.files[0])}
                   hidden
                 />
+                <input
+                  id="logoUpload"
+                  name="image"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setLogoFile(e.target.files[0])}
+                  hidden
+                />
+
                 <img
                   src={assets.profile_upload_icon}
                   alt="Upload Icon"
