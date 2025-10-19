@@ -11,7 +11,7 @@ const RecruiterAuth = () => {
   const [password, setPassword] = useState("");
   const [logo, setLogo] = useState(null);
   const [logoFile, setLogoFile] = useState(null);
-  const {setShowRecruiterLogin} = useContext(AppContext);
+  const { setShowRecruiterLogin } = useContext(AppContext);
 
   const handleLogoChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -20,16 +20,12 @@ const RecruiterAuth = () => {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle login/signup logic here
-  };
-
   const resetForm = () => {
     setName("");
     setEmail("");
     setPassword("");
     setLogo(null);
+    setLogoFile(null);
     setStep(1);
   };
 
@@ -38,17 +34,77 @@ const RecruiterAuth = () => {
     resetForm();
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (mode === "login") {
+      // Login
+      try {
+        const res = await fetch("http://localhost:3577/api/company/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert("Login successful!");
+          resetForm();
+          setShowRecruiterLogin(false);
+          localStorage.setItem("companyToken", data.token);
+        } else {
+          alert(data.message || "Login failed");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Server error. Try again later.");
+      }
+    } else {
+      // Signup
+      if (step === 2 && !logoFile) {
+        alert("Please upload a company logo");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("email", email);
+      formData.append("password", password);
+      if (logoFile) formData.append("image", logoFile);
+
+      try {
+        const res = await fetch("http://localhost:3577/api/company/register", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          alert("Company registered successfully!");
+          resetForm();
+          setMode("login");
+        } else {
+          alert(data.message || "Signup failed");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Server error. Try again later.");
+      }
+    }
+  };
+
   useEffect(() => {
     document.body.style.overflow = "hidden";
-
     return () => {
       document.body.style.overflow = "unset";
-    }
-  },[])
+    };
+  }, []);
 
   return (
     <div className="absolute top-0 left-0 right-0 bottom-0 z-10 backdrop-blur-sm bg-black/30 flex justify-center items-center">
-      <form className="relative bg-white p-10 rounded-xl text-slate-500 w-[350px]" onSubmit={handleSubmit}>
+      <form
+        className="relative bg-white p-10 rounded-xl text-slate-500 w-[350px]"
+        onSubmit={handleSubmit}
+      >
         <h1 className="text-center text-2xl text-neutral-700 font-medium capitalize">
           {mode === "login" ? "Recruiter Login" : "Recruiter Signup"}
         </h1>
@@ -80,12 +136,8 @@ const RecruiterAuth = () => {
               />
             </div>
 
-            <p className="text-sm text-blue-600 my-4 cursor-pointer">
-              Forgot Password?
-            </p>
-
             <button
-              className="bg-blue-600 w-full text-white py-2 rounded-full mt-3"
+              className="bg-blue-600 w-full text-white py-2 rounded-full mt-6"
               type="submit"
             >
               Login
@@ -211,7 +263,12 @@ const RecruiterAuth = () => {
           </>
         )}
 
-        <img onClick={e=> setShowRecruiterLogin(false)} className="w-4 absolute right-5 top-5 cursor-pointer" src={assets.cross_icon} alt="" />
+        <img
+          onClick={() => setShowRecruiterLogin(false)}
+          className="w-4 absolute right-5 top-5 cursor-pointer"
+          src={assets.cross_icon}
+          alt=""
+        />
       </form>
     </div>
   );
