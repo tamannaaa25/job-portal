@@ -1,30 +1,32 @@
-import express from "express";
-import multer from "multer";
-import {
-  registerCompany,
-  loginCompany,
-  getCompanyData,
-  postJob,
-  getCompanyPostedJobs,
-  changeVisibility,
-} from "../controllers/companyController.js";
-import { protectCompany } from "../middlewares/authMiddleware.js";
+import express from 'express'
+import { ChangeJobApplicationsStatus, changeVisiblity, getCompanyData, getCompanyJobApplicants, getCompanyPostedJobs, loginCompany, postJob, registerCompany } from '../controllers/companyController.js'
+import upload from '../config/multer.js'
+import { protectCompany } from '../middleware/authMiddleware.js'
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, "uploads/"),
-  filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
-});
+const router = express.Router()
 
-const upload = multer({ storage });
-const uploadSingle = upload.single("image");
+// Register a company
+router.post('/register', upload.single('image'), registerCompany)
 
-const router = express.Router();
+// Company login
+router.post('/login', loginCompany)
 
-router.post("/register", uploadSingle, registerCompany);
-router.post("/login", loginCompany);
-router.post("/company", protectCompany, getCompanyData);
-router.post("/postJob", protectCompany, postJob);
-router.get("/list-jobs", protectCompany, getCompanyPostedJobs);
-router.post("/change-visibility", protectCompany, changeVisibility);
+// Get company data
+router.get('/company', protectCompany, getCompanyData)
 
-export default router;
+// Post a job
+router.post('/post-job', protectCompany, postJob)
+
+// Get Applicants Data of Company
+router.get('/applicants', protectCompany, getCompanyJobApplicants)
+
+// Get  Company Job List
+router.get('/list-jobs', protectCompany, getCompanyPostedJobs)
+
+// Change Applcations Status 
+router.post('/change-status', protectCompany, ChangeJobApplicationsStatus)
+
+// Change Applcations Visiblity 
+router.post('/change-visiblity', protectCompany, changeVisiblity)
+
+export default router
