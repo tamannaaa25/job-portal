@@ -8,6 +8,10 @@ import JobApplication from "../models/JobApplication.js";
 // Register a new company
 export const registerCompany = async (req, res) => {
 
+    console.log('registerCompany called');
+    console.log('req.body ->', req.body);
+    console.log('req.file ->', req.file);
+
     const { name, email, password } = req.body
 
     const imageFile = req.file;
@@ -27,13 +31,22 @@ export const registerCompany = async (req, res) => {
         const salt = await bcrypt.genSalt(10)
         const hashPassword = await bcrypt.hash(password, salt)
 
-        const imageUpload = await cloudinary.uploader.upload(imageFile.path)
+        // upload image to cloudinary (fallback to placeholder on failure)
+        let imageUrl;
+        try {
+            const imageUpload = await cloudinary.uploader.upload(imageFile.path)
+            imageUrl = imageUpload.secure_url
+        } catch (err) {
+            console.error('Cloudinary upload failed:', err.message || err)
+            // fallback placeholder image so company creation can proceed during debugging
+            imageUrl = 'https://placehold.co/200x200?text=Company+Logo'
+        }
 
         const company = await Company.create({
             name,
             email,
             password: hashPassword,
-            image: imageUpload.secure_url
+            image: imageUrl
         })
 
         res.json({

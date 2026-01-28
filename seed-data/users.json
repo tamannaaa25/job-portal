@@ -1,0 +1,18 @@
+[
+  {
+    "_id": { "$oid": "65b6a2f2e1a9c33333333333" },
+    "name": "Aarav Sharma",
+    "email": "aarav@gmail.com",
+    "resume": "aarav_resume.pdf",
+    "createdAt": { "$date": "2026-01-28T10:40:00.000Z" },
+    "updatedAt": { "$date": "2026-01-28T10:40:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "65b6a2f2e1a9c44444444444" },
+    "name": "Priya Mehta",
+    "email": "priya@gmail.com",
+    "resume": "priya_resume.pdf",
+    "createdAt": { "$date": "2026-01-28T10:45:00.000Z" },
+    "updatedAt": { "$date": "2026-01-28T10:45:00.000Z" }
+  }
+]

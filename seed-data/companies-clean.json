@@ -1,0 +1,19 @@
+
+[
+  {
+    "name": "TechNova Solutions",
+    "email": "hr@technova.com",
+    "password": "$2a$10$7QZz0X5dC0QmZ0z5gN9O0u1rj0xP7Z7cY8K2n9zZP0lVx7pC1QF6a",
+    "image": "technova_logo.png",
+    "createdAt": "2026-01-28T10:30:00.000Z",
+    "updatedAt": "2026-01-28T10:30:00.000Z"
+  },
+  {
+    "name": "BlueWave Innovations",
+    "email": "careers@bluewave.io",
+    "password": "$2a$10$7QZz0X5dC0QmZ0z5gN9O0u1rj0xP7Z7cY8K2n9zZP0lVx7pC1QF6a",
+    "image": "bluewave_logo.png",
+    "createdAt": "2026-01-28T10:35:00.000Z",
+    "updatedAt": "2026-01-28T10:35:00.000Z"
+  }
+]
